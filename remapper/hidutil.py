@@ -4,14 +4,14 @@ import subprocess
 from typing import List, Final
 
 
-CTRL: Final = 0x7000000E4
+CONTROL: Final = 0x7000000E4
 OPTION: Final = 0x7000000E6
-CTRL_TO_OPTION: Final = {
+CONTROL_TO_OPTION: Final = {
     "UserKeyMapping": [
-        {"HIDKeyboardModifierMappingSrc": CTRL, "HIDKeyboardModifierMappingDst": OPTION}
+        {"HIDKeyboardModifierMappingSrc": CONTROL, "HIDKeyboardModifierMappingDst": OPTION}
     ]
 }
-CTRL_TO_CTRL: Final = {"UserKeyMapping": []}
+CONTROL_TO_CONTROL: Final = {"UserKeyMapping": []}
 
 
 def _call_hidutil(args: List[str]) -> str:
@@ -29,16 +29,16 @@ def is_key_mapping_active() -> bool:
         .replace(" ", "")
     )
     return (
-        f"HIDKeyboardModifierMappingSrc={CTRL}" in key_maps
+        f"HIDKeyboardModifierMappingSrc={CONTROL}" in key_maps
         and f"HIDKeyboardModifierMappingDst={OPTION}" in key_maps
     )
 
 
 def enable() -> str:
-    """Switches right ctrl to right option"""
-    return _call_hidutil(["property", "--set", json.dumps(CTRL_TO_OPTION)])
+    """Enables the custom key mapping"""
+    return _call_hidutil(["property", "--set", json.dumps(CONTROL_TO_OPTION)])
 
 
 def disable() -> str:
-    """Switches right option to right control"""
-    return _call_hidutil(["property", "--set", json.dumps(CTRL_TO_CTRL)])
+    """Disables the custom key mapping"""
+    return _call_hidutil(["property", "--set", json.dumps(CONTROL_TO_CONTROL)])
